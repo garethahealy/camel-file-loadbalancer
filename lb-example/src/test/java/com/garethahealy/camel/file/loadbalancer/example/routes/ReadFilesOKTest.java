@@ -54,7 +54,7 @@ public class ReadFilesOKTest extends BaseCamelBlueprintTestSupport {
 
     private void sleep() {
         try {
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(5);
         } catch (InterruptedException ex) {
             //ignore
         }

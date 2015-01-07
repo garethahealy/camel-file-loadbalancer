@@ -32,7 +32,7 @@
             <cm:property name="lb.path" value="/Users/garethah/Documents/github/garethahealy/camel-file-loadbalancer/lb-example/target/files"/>
             <cm:property name="lb.initialDelay" value="5s"/>
             <cm:property name="lb.delay" value="10s"/>
-            <cm:property name="lb.numberOfWatchers" value="3"/>
+            <cm:property name="lb.amountOfWatchers" value="3"/>
         </cm:default-properties>
     </cm:property-placeholder>
 
@@ -41,7 +41,7 @@
     </bean>
 
     <bean id="defaultPriorityFileFilterFactory" class="com.garethahealy.camel.file.loadbalancer.filter.DefaultPriorityFileFilterFactory" init-method="init">
-        <argument value="3"/>
+        <argument value="${lb.amountOfWatchers}"/>
     </bean>
 
     <camelContext id="lb-example-context" trace="false" xmlns="http://camel.apache.org/schema/blueprint">
