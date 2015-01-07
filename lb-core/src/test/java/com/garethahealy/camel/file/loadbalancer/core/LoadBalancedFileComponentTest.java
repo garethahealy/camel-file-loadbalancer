@@ -64,7 +64,7 @@ public class LoadBalancedFileComponentTest extends BaseCamelBlueprintTestSupport
 
     @Test
     public void createEndpointHonoursMove() throws Exception {
-        String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&fileFilters=#fileFiltersList&filter=#firstLoadBalancedFileFilter&runLoggingLevel=INFO&move=.camel";
+        String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&fileFilters=#fileFiltersList&filter=#firstLoadBalancedFileFilter&runLoggingLevel=INFO&move=.another";
         LoadBalancedFileComponent component = new LoadBalancedFileComponent(context);
         Endpoint endpoint = component.createEndpoint(uri);
 
@@ -83,7 +83,7 @@ public class LoadBalancedFileComponentTest extends BaseCamelBlueprintTestSupport
         Assert.assertEquals("markerFile", loadBalancedFileEndpoint.getReadLock());
         Assert.assertEquals(1, loadBalancedFileEndpoint.getFileFilters().size());
         Assert.assertEquals(PriorityFileFilter.class, loadBalancedFileEndpoint.getFilter().getClass());
-        Assert.assertEquals("${file:parent}/.camel0/${file:onlyname}", loadBalancedFileEndpoint.getMove().toString());
+        Assert.assertEquals("${file:parent}/.another0/${file:onlyname}", loadBalancedFileEndpoint.getMove().toString());
         Assert.assertEquals(1, loadBalancedFileEndpoint.getMaxMessagesPerPoll());
     }
 

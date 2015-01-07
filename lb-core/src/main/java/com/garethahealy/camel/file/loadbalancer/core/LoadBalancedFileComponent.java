@@ -87,13 +87,12 @@ public class LoadBalancedFileComponent extends FileComponent {
             //Set the move directory to contain the priority so its easy to distinguish what moved the file
             String currentMove = lbEndpoint.getMove() == null ? "" : lbEndpoint.getMove().toString();
             String move = ".camel";
-            //if (lbEndpoint.getMove() != null) {
-            //TODO: if move has been set, get it back and use that
-            //}
-
-            //if (move == null || move.trim().length() <= 0) {
-            //    move = ".camel";
-            //}
+            if (currentMove.length() > 0) {
+                String[] moveSplit = currentMove.split("/");
+                if (moveSplit.length == 3) {
+                    move = moveSplit[1];
+                }
+            }
 
             LOG.debug("Updating Move from '{}' to '{}'", currentMove, move + filter.getPriority());
 
