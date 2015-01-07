@@ -27,5 +27,4 @@ Thus you don't have to set how many endpoints are watching the folder, it knows 
 
 TODO:
 ===================
-move isnt honoured currently
 factory needs impelmenting

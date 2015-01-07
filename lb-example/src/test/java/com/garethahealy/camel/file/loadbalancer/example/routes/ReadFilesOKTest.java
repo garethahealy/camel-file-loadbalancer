@@ -87,7 +87,5 @@ public class ReadFilesOKTest extends BaseCamelBlueprintTestSupport {
         Assert.assertNotNull(firstFiles);
         Assert.assertNotNull(secondFiles);
         Assert.assertNotNull(thirdFiles);
-
-        //Check files exist in the correct directories
     }
 }
