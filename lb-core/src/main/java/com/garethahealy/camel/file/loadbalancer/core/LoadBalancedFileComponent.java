@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.Map;
 
 import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter;
+import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilterFactory;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ResolveEndpointFailedException;
@@ -59,28 +60,45 @@ public class LoadBalancedFileComponent extends FileComponent {
         if (endpoint instanceof LoadBalancedFileEndpoint) {
             LoadBalancedFileEndpoint lbEndpoint = (LoadBalancedFileEndpoint)endpoint;
 
-            updateMaxMessagesPerPoll(lbEndpoint);
+            PriorityFileFilterFactory factory = lbEndpoint.getPriorityFileFilterFactory();
+            if (factory == null) {
+                throw new ResolveEndpointFailedException(lbEndpoint.getEndpointUri(), "PriorityFileFilterFactory is null");
+            }
+
+            updateFilter(lbEndpoint, factory);
+            updateMaxMessagesPerPoll(lbEndpoint, factory);
             updateMove(lbEndpoint);
         }
     }
 
-    private void updateMaxMessagesPerPoll(LoadBalancedFileEndpoint lbEndpoint) {
-        if (lbEndpoint.getFileFilters() != null) {
-            //If its not been set on the URI, then we'll set it, so there isnt any competing of files by mistake
-            if (lbEndpoint.getMaxMessagesPerPoll() == 0) {
-                LOG.debug("Updating MaxMessagesPerPoll from '0' to '{}'", lbEndpoint.getFileFilters().size());
+    private void updateFilter(LoadBalancedFileEndpoint lbEndpoint, PriorityFileFilterFactory factory) {
+        //Update the filter with one thats been created by the factory
+        if (lbEndpoint.getFilter() == null) {
+            LOG.debug("Updating Filter as not set");
 
-                lbEndpoint.setMaxMessagesPerPoll(lbEndpoint.getFileFilters().size());
-            } else {
-                String message = String.format("MaxMessagesPerPoll is set as '%s' which does not match the number of file filters '%s'", lbEndpoint.getMaxMessagesPerPoll(),
-                    lbEndpoint.getFileFilters().size());
+            lbEndpoint.setFilter(factory.get());
+        } else {
+            throw new ResolveEndpointFailedException(lbEndpoint.getEndpointUri(), "Filter is set, which stops the PriorityFileFilterFactory overriding");
+        }
 
-                throw new ResolveEndpointFailedException(lbEndpoint.getEndpointUri(), message);
-            }
+    }
+
+    private void updateMaxMessagesPerPoll(LoadBalancedFileEndpoint lbEndpoint, PriorityFileFilterFactory factory) {
+        //Update the MaxMessagesPerPoll to match the amount of watches, so we don't get competing files
+        if (lbEndpoint.getMaxMessagesPerPoll() <= 0) {
+            LOG.debug("Updating MaxMessagesPerPoll from '{}' to '{}'", lbEndpoint.getMaxMessagesPerPoll(), factory.getAmountOfWatchers());
+
+            lbEndpoint.setMaxMessagesPerPoll(factory.getAmountOfWatchers());
+        } else {
+            String message = String.format("MaxMessagesPerPoll is set as '%s' which does not match the amount of watchers '%s'", lbEndpoint.getMaxMessagesPerPoll(),
+                                           factory.getAmountOfWatchers());
+
+            throw new ResolveEndpointFailedException(lbEndpoint.getEndpointUri(), message);
         }
     }
 
     private void updateMove(LoadBalancedFileEndpoint lbEndpoint) {
+        //Update Move so we can easily track whats files were handled by what endpoint
         if (lbEndpoint.getFilter() instanceof PriorityFileFilter) {
             PriorityFileFilter filter = (PriorityFileFilter)lbEndpoint.getFilter();
 

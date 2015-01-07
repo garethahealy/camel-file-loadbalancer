@@ -20,9 +20,8 @@
 package com.garethahealy.camel.file.loadbalancer.core;
 
 import java.io.File;
-import java.util.List;
 
-import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter;
+import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilterFactory;
 
 import org.apache.camel.Component;
 import org.apache.camel.Processor;
@@ -33,7 +32,8 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 public class LoadBalancedFileEndpoint extends FileEndpoint {
 
-    private List<PriorityFileFilter> fileFilters;
+    private PriorityFileFilterFactory priorityFileFilterFactory;
+    private String uniqueKey;
 
     public LoadBalancedFileEndpoint(String endpointUri, Component component) {
         super(endpointUri, component);
@@ -43,12 +43,20 @@ public class LoadBalancedFileEndpoint extends FileEndpoint {
         this.setSortBy("file:name");
     }
 
-    public void setFileFilters(List<PriorityFileFilter> fileFilters) {
-        this.fileFilters = fileFilters;
+    public PriorityFileFilterFactory getPriorityFileFilterFactory() {
+        return priorityFileFilterFactory;
     }
 
-    public List<PriorityFileFilter> getFileFilters() {
-        return fileFilters;
+    public void setPriorityFileFilterFactory(PriorityFileFilterFactory priorityFileFilterFactory) {
+        this.priorityFileFilterFactory = priorityFileFilterFactory;
+    }
+
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     protected FileConsumer newFileConsumer(Processor processor, GenericFileOperations<File> operations) {

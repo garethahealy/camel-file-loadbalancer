@@ -1,6 +1,6 @@
 camel-file-loadbalancer
 ===================
-Sample code to have multiple camel file uri routes, watching the same folder, i.e.: 'load balancer' for files
+Sample code to have multiple camel file uri routes (either in same context or different), watching the same folder, i.e.: 'load balancer' for files
 
 Current implementation works by the following logic:
 
@@ -20,11 +20,10 @@ This means that you end up with the following:
 - Endpoint 2 has a priority of 2, thus gets the third file
 - and so on...
 
+If you are going to deploy the same endpoint, multiple times within the same context (as per lb-example), you will also need to set a value for 'uniqueKey'.
+This is because Camel checks for endpoint uniqueness, we get around this with a slight hack
+
 future
 ===================
 Am also going to look into creating a 'fabric' (i.e. zookeeper backed) endpoint, which automatically scales.
 Thus you don't have to set how many endpoints are watching the folder, it knows because of the number which has registered
-
-TODO:
-===================
-factory needs impelmenting

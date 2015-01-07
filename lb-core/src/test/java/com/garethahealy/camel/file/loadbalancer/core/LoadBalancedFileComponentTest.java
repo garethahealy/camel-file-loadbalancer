@@ -39,7 +39,7 @@ public class LoadBalancedFileComponentTest extends BaseCamelBlueprintTestSupport
 
     @Test
     public void createEndpointWorks() throws Exception {
-        String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&fileFilters=#fileFiltersList&filter=#firstLoadBalancedFileFilter&runLoggingLevel=INFO";
+        String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&priorityFileFilterFactory=#defaultPriorityFileFilterFactory&runLoggingLevel=INFO";
         LoadBalancedFileComponent component = new LoadBalancedFileComponent(context);
         Endpoint endpoint = component.createEndpoint(uri);
 
@@ -50,13 +50,13 @@ public class LoadBalancedFileComponentTest extends BaseCamelBlueprintTestSupport
 
         Assert.assertNotNull(loadBalancedFileEndpoint.getSortBy());
         Assert.assertNotNull(loadBalancedFileEndpoint.getReadLock());
-        Assert.assertNotNull(loadBalancedFileEndpoint.getFileFilters());
+        Assert.assertNotNull(loadBalancedFileEndpoint.getPriorityFileFilterFactory());
         Assert.assertNotNull(loadBalancedFileEndpoint.getFilter());
         Assert.assertNotNull(loadBalancedFileEndpoint.getMove());
         Assert.assertNotNull(loadBalancedFileEndpoint.getMaxMessagesPerPoll());
 
         Assert.assertEquals("markerFile", loadBalancedFileEndpoint.getReadLock());
-        Assert.assertEquals(1, loadBalancedFileEndpoint.getFileFilters().size());
+        Assert.assertEquals(1, loadBalancedFileEndpoint.getPriorityFileFilterFactory().getAmountOfWatchers());
         Assert.assertEquals(PriorityFileFilter.class, loadBalancedFileEndpoint.getFilter().getClass());
         Assert.assertEquals("${file:parent}/.camel0/${file:onlyname}", loadBalancedFileEndpoint.getMove().toString());
         Assert.assertEquals(1, loadBalancedFileEndpoint.getMaxMessagesPerPoll());
@@ -64,7 +64,7 @@ public class LoadBalancedFileComponentTest extends BaseCamelBlueprintTestSupport
 
     @Test
     public void createEndpointHonoursMove() throws Exception {
-        String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&fileFilters=#fileFiltersList&filter=#firstLoadBalancedFileFilter&runLoggingLevel=INFO&move=.another";
+        String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&priorityFileFilterFactory=#defaultPriorityFileFilterFactory&runLoggingLevel=INFO&move=.another";
         LoadBalancedFileComponent component = new LoadBalancedFileComponent(context);
         Endpoint endpoint = component.createEndpoint(uri);
 
@@ -75,13 +75,13 @@ public class LoadBalancedFileComponentTest extends BaseCamelBlueprintTestSupport
 
         Assert.assertNotNull(loadBalancedFileEndpoint.getSortBy());
         Assert.assertNotNull(loadBalancedFileEndpoint.getReadLock());
-        Assert.assertNotNull(loadBalancedFileEndpoint.getFileFilters());
+        Assert.assertNotNull(loadBalancedFileEndpoint.getPriorityFileFilterFactory());
         Assert.assertNotNull(loadBalancedFileEndpoint.getFilter());
         Assert.assertNotNull(loadBalancedFileEndpoint.getMove());
         Assert.assertNotNull(loadBalancedFileEndpoint.getMaxMessagesPerPoll());
 
         Assert.assertEquals("markerFile", loadBalancedFileEndpoint.getReadLock());
-        Assert.assertEquals(1, loadBalancedFileEndpoint.getFileFilters().size());
+        Assert.assertEquals(1, loadBalancedFileEndpoint.getPriorityFileFilterFactory().getAmountOfWatchers());
         Assert.assertEquals(PriorityFileFilter.class, loadBalancedFileEndpoint.getFilter().getClass());
         Assert.assertEquals("${file:parent}/.another0/${file:onlyname}", loadBalancedFileEndpoint.getMove().toString());
         Assert.assertEquals(1, loadBalancedFileEndpoint.getMaxMessagesPerPoll());
@@ -90,7 +90,23 @@ public class LoadBalancedFileComponentTest extends BaseCamelBlueprintTestSupport
     @Test(expected = ResolveEndpointFailedException.class)
     public void createEndpointThrowsExceptionIfMaxMessagesPerPollSet() throws Exception {
         String uri =
-            "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&fileFilters=#fileFiltersList&filter=#firstLoadBalancedFileFilter&runLoggingLevel=INFO&maxMessagesPerPoll=10";
+            "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&priorityFileFilterFactory=#defaultPriorityFileFilterFactory&runLoggingLevel=INFO&maxMessagesPerPoll=10";
+        LoadBalancedFileComponent component = new LoadBalancedFileComponent(context);
+        component.createEndpoint(uri);
+    }
+
+    @Test(expected = ResolveEndpointFailedException.class)
+    public void createEndpointThrowsExceptionIfFilterSet() throws Exception {
+        String uri =
+            "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&fileFilters=#fileFiltersList&runLoggingLevel=INFO&filter=#priorityFileFilter";
+        LoadBalancedFileComponent component = new LoadBalancedFileComponent(context);
+        component.createEndpoint(uri);
+    }
+
+    @Test(expected = ResolveEndpointFailedException.class)
+    public void createEndpointThrowsExceptionIfPriorityFileFilterFactoryNotSet() throws Exception {
+        String uri =
+            "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&runLoggingLevel=INFO";
         LoadBalancedFileComponent component = new LoadBalancedFileComponent(context);
         component.createEndpoint(uri);
     }

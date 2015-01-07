@@ -72,4 +72,18 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
 
         return holder.get(counter.getAndIncrement());
     }
+
+    @Override
+    public int getAmountOfWatchers() {
+        return amountOfWatchers;
+    }
+
+    @Override
+    public void resetCountersOnFilters() {
+        if (holder != null) {
+            for (PriorityFileFilter current : holder.values()) {
+                current.resetCounter();
+            }
+        }
+    }
 }

@@ -22,7 +22,9 @@ package com.garethahealy.camel.file.loadbalancer.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.garethahealy.camel.file.loadbalancer.filter.DefaultPriorityFileFilterFactory;
 import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter;
+import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilterFactory;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,18 +33,18 @@ public class LoadBalancedFileEndpointTest extends BaseCamelBlueprintTestSupport 
 
     @Test
     public void canCreateEndpoint() throws Exception {
-        String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&fileFilters=#fileFiltersList&filter=#firstLoadBalancedFileFilter&runLoggingLevel=INFO";
+        String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&priorityFileFilterFactory=#defaultPriorityFileFilterFactory&runLoggingLevel=INFO";
 
-        List<PriorityFileFilter> filters = new ArrayList<PriorityFileFilter>();
-        filters.add(new PriorityFileFilter(1));
+        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1);
+        factory.init();
 
         LoadBalancedFileEndpoint loadBalancedFileEndpoint = new LoadBalancedFileEndpoint(uri, new LoadBalancedFileComponent(context));
-        loadBalancedFileEndpoint.setFileFilters(filters);
+        loadBalancedFileEndpoint.setPriorityFileFilterFactory(factory);
 
         Assert.assertNotNull(loadBalancedFileEndpoint.getSortBy());
         Assert.assertNotNull(loadBalancedFileEndpoint.getReadLock());
-        Assert.assertNotNull(loadBalancedFileEndpoint.getFileFilters());
+        Assert.assertNotNull(loadBalancedFileEndpoint.getPriorityFileFilterFactory());
 
-        Assert.assertEquals(1, loadBalancedFileEndpoint.getFileFilters().size());
+        Assert.assertEquals(1, loadBalancedFileEndpoint.getPriorityFileFilterFactory().getAmountOfWatchers());
     }
 }

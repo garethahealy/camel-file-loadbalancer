@@ -24,4 +24,8 @@ public interface PriorityFileFilterFactory {
     void init();
 
     PriorityFileFilter get();
+
+    int getAmountOfWatchers();
+
+    void resetCountersOnFilters();
 }

@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.List;
 
 import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter;
+import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilterFactory;
 
 import org.apache.camel.Processor;
 import org.apache.camel.component.file.FileConsumer;
@@ -38,16 +39,12 @@ public class LoadBalancedFileConsumer extends FileConsumer {
 
     @Override
     protected boolean prePollCheck() throws Exception {
-        //Loop over the fileFilters and reset them
         FileEndpoint endpoint = getEndpoint();
         if (endpoint instanceof LoadBalancedFileEndpoint) {
             LoadBalancedFileEndpoint lbEndpoint = (LoadBalancedFileEndpoint)endpoint;
-            List<PriorityFileFilter> filters = lbEndpoint.getFileFilters();
-            if (filters != null && filters.size() > 0) {
-                for (PriorityFileFilter current : filters) {
-                    current.resetCounter();
-                }
-            }
+
+            PriorityFileFilterFactory factory = lbEndpoint.getPriorityFileFilterFactory();
+            factory.resetCountersOnFilters();
         }
 
         return super.prePollCheck();

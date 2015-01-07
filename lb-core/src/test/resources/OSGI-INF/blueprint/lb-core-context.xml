@@ -25,16 +25,12 @@
        http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
        http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
 
-    <bean id="firstLoadBalancedFileFilter" class="com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter">
-        <argument value="0"/>
+    <bean id="defaultPriorityFileFilterFactory" class="com.garethahealy.camel.file.loadbalancer.filter.DefaultPriorityFileFilterFactory" init-method="init">
+        <argument value="1"/>
     </bean>
 
-    <bean id="fileFiltersList" class="java.util.ArrayList">
-        <argument>
-            <list>
-                <ref component-id="firstLoadBalancedFileFilter"/>
-            </list>
-        </argument>
+    <bean id="priorityFileFilter" class="com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter">
+        <argument value="0"/>
     </bean>
 
     <camelContext id="lb-core-context" trace="false" xmlns="http://camel.apache.org/schema/blueprint"/>

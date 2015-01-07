@@ -30,7 +30,7 @@ public class LoadBalancedFileConsumerTest extends BaseCamelBlueprintTestSupport 
 
     @Test
     public void canCreateConsumer() {
-        String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&fileFilters=#fileFiltersList&filter=#firstLoadBalancedFileFilter&runLoggingLevel=INFO";
+        String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&priorityFileFilterFactory=#defaultPriorityFileFilterFactory&runLoggingLevel=INFO";
 
         LogProcessor processor = new LogProcessor(ExpressionBuilder.simpleExpression("${body}"), new CamelLogger());
         LoadBalancedFileEndpoint loadBalancedFileEndpoint = new LoadBalancedFileEndpoint(uri, new LoadBalancedFileComponent(context));
