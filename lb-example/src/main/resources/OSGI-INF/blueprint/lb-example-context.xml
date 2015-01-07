@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  camel-activemq-transacted
+  %%
+  Copyright (C) 2013 - 2014 Gareth Healy
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+
+<blueprint xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
+       http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
+
+    <cm:property-placeholder persistent-id="com.garethahealy.camel.file.loadbalancer.example" update-strategy="reload">
+        <cm:default-properties>
+            <cm:property name="lb.path" value="/Users/garethah/Documents/github/garethahealy/camel-file-loadbalancer/lb-example/target/files"/>
+            <cm:property name="lb.initialDelay" value="5s"/>
+            <cm:property name="lb.delay" value="10s"/>
+            <cm:property name="lb.numberOfWatchers" value="3"/>
+        </cm:default-properties>
+    </cm:property-placeholder>
+
+    <bean id="lb-file" class="com.garethahealy.camel.file.loadbalancer.core.LoadBalancedFileComponent">
+        <argument ref="lb-example-context"/>
+    </bean>
+
+    <bean id="firstLoadBalancedFileFilter" class="com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter">
+        <argument value="0"/>
+    </bean>
+
+    <bean id="secondLoadBalancedFileFilter" class="com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter">
+        <argument value="1"/>
+    </bean>
+
+    <bean id="thirdLoadBalancedFileFilter" class="com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter">
+        <argument value="2"/>
+    </bean>
+
+    <bean id="fileFiltersList" class="java.util.ArrayList">
+        <argument>
+            <list>
+                <ref component-id="firstLoadBalancedFileFilter"/>
+                <ref component-id="secondLoadBalancedFileFilter"/>
+                <ref component-id="thirdLoadBalancedFileFilter"/>
+            </list>
+        </argument>
+    </bean>
+
+    <camelContext id="lb-example-context" trace="false" xmlns="http://camel.apache.org/schema/blueprint">
+
+        <route id="readFirstFile">
+            <from uri="lb-file://{{lb.path}}?initialDelay={{lb.initialDelay}}&amp;delay={{lb.delay}}&amp;fileFilters=#fileFiltersList&amp;filter=#firstLoadBalancedFileFilter&amp;runLoggingLevel=INFO"/>
+            <log message="readFirstFile - ${header.CamelFileName}"/>
+            <setBody>
+                <simple>${header.CamelFileName}</simple>
+            </setBody>
+            <to uri="mock:endFirst"/>
+        </route>
+
+        <route id="readSecondFile">
+            <from uri="lb-file://{{lb.path}}?initialDelay={{lb.initialDelay}}&amp;delay={{lb.delay}}&amp;fileFilters=#fileFiltersList&amp;filter=#secondLoadBalancedFileFilter&amp;runLoggingLevel=INFO"/>
+            <log message="readSecondFile - ${header.CamelFileName}"/>
+            <setBody>
+                <simple>${header.CamelFileName}</simple>
+            </setBody>
+            <to uri="mock:endSecond"/>
+        </route>
+
+        <route id="readThirdFile">
+            <from uri="lb-file://{{lb.path}}?initialDelay={{lb.initialDelay}}&amp;delay={{lb.delay}}&amp;fileFilters=#fileFiltersList&amp;filter=#thirdLoadBalancedFileFilter&amp;runLoggingLevel=INFO"/>
+            <log message="readThirdFile - ${header.CamelFileName}"/>
+            <setBody>
+                <simple>${header.CamelFileName}</simple>
+            </setBody>
+            <to uri="mock:endThird"/>
+        </route>
+
+    </camelContext>
+</blueprint>
