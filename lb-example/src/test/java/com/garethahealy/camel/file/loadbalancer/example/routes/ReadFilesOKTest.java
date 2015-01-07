@@ -20,13 +20,15 @@
 package com.garethahealy.camel.file.loadbalancer.example.routes;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class ReadFilesOKTest extends BaseCamelBlueprintTestSupport {
@@ -59,7 +61,7 @@ public class ReadFilesOKTest extends BaseCamelBlueprintTestSupport {
     }
 
     @Test
-    public void canReadFile() throws InterruptedException {
+    public void canReadFile() throws InterruptedException, MalformedURLException {
         MockEndpoint first = getMockEndpoint("mock:endFirst");
         first.setExpectedMessageCount(1);
         first.expectedBodiesReceived("file1.log");
@@ -77,6 +79,14 @@ public class ReadFilesOKTest extends BaseCamelBlueprintTestSupport {
         first.assertIsSatisfied();
         second.assertIsSatisfied();
         third.assertIsSatisfied();
+
+        Collection<File> firstFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel0")), FileFilterUtils.prefixFileFilter("file1.log"), null);
+        Collection<File> secondFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel1")), FileFilterUtils.prefixFileFilter("file2.log"), null);
+        Collection<File> thirdFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel2")), FileFilterUtils.prefixFileFilter("file3.log"), null);
+
+        Assert.assertNotNull(firstFiles);
+        Assert.assertNotNull(secondFiles);
+        Assert.assertNotNull(thirdFiles);
 
         //Check files exist in the correct directories
     }
