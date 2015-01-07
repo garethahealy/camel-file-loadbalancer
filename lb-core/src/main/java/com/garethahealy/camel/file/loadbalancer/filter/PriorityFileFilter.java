@@ -54,10 +54,8 @@ public class PriorityFileFilter implements GenericFileFilter {
         //Only accept if the counter is the same as the priority
         //i.e: first priority gets first file, and so on
 
-        int currentCount = counter.get();
+        int currentCount = counter.getAndIncrement();
         boolean isMatched = currentCount == priority;
-
-        counter.incrementAndGet();
 
         LOG.debug("file: {}, count: {}, priority: {}, isMatched: {}", file.getFileName(), currentCount, priority, isMatched);
         return isMatched;

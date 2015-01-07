@@ -21,4 +21,7 @@ package com.garethahealy.camel.file.loadbalancer.filter;
 
 public interface PriorityFileFilterFactory {
 
+    void init();
+
+    PriorityFileFilter get();
 }
