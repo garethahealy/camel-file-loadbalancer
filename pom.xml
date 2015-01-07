@@ -264,6 +264,14 @@
                 <scope>provided</scope>
             </dependency>
 
+            <!-- fabric8 -->
+            <dependency>
+                <groupId>io.fabric8</groupId>
+                <artifactId>fabric-camel</artifactId>
+                <version>${fabric8-version}</version>
+                <scope>provided</scope>
+            </dependency>
+
             <!-- Commons -->
             <dependency>
                 <groupId>org.apache.commons</groupId>

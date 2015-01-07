@@ -15,11 +15,20 @@
 
     <properties>
         <build.osgi.import.before.defaults>
-            <!-- com.someone;version="[1.0,2.0)" -->
+            org.linkedin.zookeeper.client,
+            io.fabric8.zookeeper.spring,
+            io.fabric8.zookeeper
         </build.osgi.import.before.defaults>
         <build.osgi.export.pkg>com.garethahealy.camel.file.loadbalancer.*</build.osgi.export.pkg>
         <build.osgi.export.service/>
         <build.osgi.activator/>
     </properties>
-
+<!--
+    <dependencies>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric-camel</artifactId>
+        </dependency>
+    </dependencies>
+-->
 </project>
