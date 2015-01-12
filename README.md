@@ -27,3 +27,9 @@ future
 ===================
 Am also going to look into creating a 'fabric' (i.e. zookeeper backed) endpoint, which automatically scales.
 Thus you don't have to set how many endpoints are watching the folder, it knows because of the number which has registered
+
+rename project/work to (few ideas)
+- camel-file-multiple-read-priority
+- camel-file-priority
+-camel-file-multiple-folder
+- ....???
