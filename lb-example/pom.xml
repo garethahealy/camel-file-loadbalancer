@@ -24,7 +24,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.garethahealy</groupId>
+            <groupId>com.garethahealy.camel</groupId>
             <artifactId>lb-core</artifactId>
             <version>${project.version}</version>
         </dependency>
