@@ -59,6 +59,7 @@ public class LoadBalancedFileEndpoint extends FileEndpoint {
         this.uniqueKey = uniqueKey;
     }
 
+    @Override
     protected FileConsumer newFileConsumer(Processor processor, GenericFileOperations<File> operations) {
         return new LoadBalancedFileConsumer(this, processor, operations);
     }

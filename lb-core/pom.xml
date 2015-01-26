@@ -23,12 +23,12 @@
         <build.osgi.export.service/>
         <build.osgi.activator/>
     </properties>
-<!--
-    <dependencies>
-        <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>fabric-camel</artifactId>
-        </dependency>
-    </dependencies>
--->
+    <!--
+        <dependencies>
+            <dependency>
+                <groupId>io.fabric8</groupId>
+                <artifactId>fabric-camel</artifactId>
+            </dependency>
+        </dependencies>
+    -->
 </project>

@@ -20,9 +20,7 @@
 package com.garethahealy.camel.file.loadbalancer.core;
 
 import java.io.File;
-import java.util.List;
 
-import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter;
 import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilterFactory;
 
 import org.apache.camel.Processor;

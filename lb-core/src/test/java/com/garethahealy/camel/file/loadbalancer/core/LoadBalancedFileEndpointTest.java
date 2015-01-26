@@ -19,11 +19,7 @@
  */
 package com.garethahealy.camel.file.loadbalancer.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.garethahealy.camel.file.loadbalancer.filter.DefaultPriorityFileFilterFactory;
-import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter;
 import com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilterFactory;
 
 import org.junit.Assert;

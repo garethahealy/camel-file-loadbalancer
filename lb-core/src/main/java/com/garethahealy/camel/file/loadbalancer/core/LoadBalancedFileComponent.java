@@ -42,6 +42,7 @@ public class LoadBalancedFileComponent extends FileComponent {
         setEndpointClass(LoadBalancedFileEndpoint.class);
     }
 
+    @Override
     protected GenericFileEndpoint<File> buildFileEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
         //Use the base camel code to create the endpoint config, and then dump it into our endpoint
         GenericFileEndpoint<File> camelFileEndpoint = super.buildFileEndpoint(uri, remaining, parameters);
