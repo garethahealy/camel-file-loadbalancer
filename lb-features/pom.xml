@@ -4,8 +4,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.garethahealy</groupId>
-        <artifactId>camel-file-loadbalancer</artifactId>
+        <groupId>com.garethahealy.camel</groupId>
+        <artifactId>camel-file-loadbalancer-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
