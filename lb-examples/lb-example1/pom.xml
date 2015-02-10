@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.garethahealy.camel</groupId>
-        <artifactId>camel-file-loadbalancer-parent</artifactId>
+        <artifactId>lb-examples</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
-    <artifactId>lb-example</artifactId>
+    <artifactId>lb-example1</artifactId>
     <packaging>bundle</packaging>
     <name>${project.artifactId}</name>
 

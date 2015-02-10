@@ -18,12 +18,12 @@
     <scm>
         <connection>scm:git:https://github.com/garethahealy/camel-file-loadbalancer/tree/master</connection>
         <developerConnection>scm:git:https://github.com/garethahealy/camel-file-loadbalancer/tree/master</developerConnection>
-        <url>scm:git:https://github.com/garethahealy/camel-file-loadbalancer/tree/master</url>
+        <url>https://github.com/garethahealy/camel-file-loadbalancer/tree/master</url>
     </scm>
 
     <modules>
         <module>lb-core</module>
-        <module>lb-example</module>
+        <module>lb-examples</module>
         <module>lb-features</module>
     </modules>
 
