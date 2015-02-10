@@ -48,7 +48,7 @@ public class PriorityFileFilter implements GenericFileFilter {
         boolean isDirty = counter.get() > 0;
         if (isDirty) {
             //Resets the counter, as we are polling again so need to be fresh
-            LOG.debug("Resetting counter for PriorityFileFilter '{}' for {}#{}", priority, PriorityFileFilter.class.getName(), hashCode());
+            LOG.debug("Resetting counter for PriorityFileFilter '{}'", priority);
 
             counter.set(0);
         }
