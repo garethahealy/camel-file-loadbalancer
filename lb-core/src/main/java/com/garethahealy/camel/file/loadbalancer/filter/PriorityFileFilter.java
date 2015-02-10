@@ -23,6 +23,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.camel.component.file.GenericFile;
 import org.apache.camel.component.file.GenericFileFilter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,16 +45,19 @@ public class PriorityFileFilter implements GenericFileFilter {
     }
 
     public void resetCounter() {
-        //Resets the counter, as we are polling again so need to be fresh
-        LOG.debug("Resetting counter for PriorityFileFilter '{}'", priority);
+        boolean isDirty = counter.get() > 0;
+        if (isDirty) {
+            //Resets the counter, as we are polling again so need to be fresh
+            LOG.debug("Resetting counter for PriorityFileFilter '{}' for {}#{}", priority, PriorityFileFilter.class.getName(), hashCode());
 
-        counter.set(0);
+            counter.set(0);
+        }
     }
 
     @Override
     public boolean accept(GenericFile file) {
         //Only accept if the counter is the same as the priority
-        //i.e: first priority gets first file, and so on
+        //i.e: first priority gets first file, second priority gets second file, and so on
 
         int currentCount = counter.getAndIncrement();
         boolean isMatched = currentCount == priority;
@@ -67,5 +72,15 @@ public class PriorityFileFilter implements GenericFileFilter {
             .append("counter", counter)
             .append("priority", priority)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return EqualsBuilder.reflectionEquals(this, o);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 }
