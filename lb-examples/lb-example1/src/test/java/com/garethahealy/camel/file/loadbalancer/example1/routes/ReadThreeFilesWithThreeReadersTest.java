@@ -37,19 +37,25 @@ public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSu
     private String rootDirectory = System.getProperty("user.dir") + "/target/files";
 
     @Override
+    public boolean isCreateCamelContextPerClass() {
+        return true;
+    }
+
+    @Override
     protected String useOverridePropertiesWithConfigAdmin(Dictionary props) throws Exception {
         props.put("lb.path", rootDirectory);
 
         return "com.garethahealy.camel.file.loadbalancer.example1";
     }
 
+    @Override
     protected void doPreSetup() throws Exception {
         File directory = FileUtils.toFile(new URL("file:" + rootDirectory));
         directory.mkdir();
 
-        URL file1 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/file1.log");
-        URL file2 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/file2.log");
-        URL file3 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/file3.log");
+        URL file1 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/afile1.log");
+        URL file2 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/bfile2.log");
+        URL file3 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/cfile3.log");
 
         Assert.assertNotNull(file1);
         Assert.assertNotNull(file2);
@@ -62,7 +68,7 @@ public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSu
 
     private void sleep() {
         try {
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(10);
         } catch (InterruptedException ex) {
             //ignore
         }
@@ -72,15 +78,12 @@ public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSu
     public void readThreeFilesWithThreeReaders() throws InterruptedException, MalformedURLException {
         MockEndpoint first = getMockEndpoint("mock:endFirst");
         first.setExpectedMessageCount(1);
-        first.expectedBodiesReceived("file1.log");
 
         MockEndpoint second = getMockEndpoint("mock:endSecond");
         second.setExpectedMessageCount(1);
-        second.expectedBodiesReceived("file2.log");
 
         MockEndpoint third = getMockEndpoint("mock:endThird");
         third.setExpectedMessageCount(1);
-        third.expectedBodiesReceived("file3.log");
 
         sleep();
 
@@ -88,9 +91,9 @@ public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSu
         second.assertIsSatisfied();
         third.assertIsSatisfied();
 
-        Collection<File> firstFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel0")), FileFilterUtils.prefixFileFilter("file1.log"), null);
-        Collection<File> secondFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel1")), FileFilterUtils.prefixFileFilter("file2.log"), null);
-        Collection<File> thirdFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel2")), FileFilterUtils.prefixFileFilter("file3.log"), null);
+        Collection<File> firstFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel0")), FileFilterUtils.fileFileFilter(), null);
+        Collection<File> secondFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel1")), FileFilterUtils.fileFileFilter(), null);
+        Collection<File> thirdFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel2")), FileFilterUtils.fileFileFilter(), null);
 
         Assert.assertNotNull(firstFiles);
         Assert.assertNotNull(secondFiles);

@@ -87,12 +87,12 @@ public class LoadBalancedFileComponent extends FileComponent {
     private void updateMaxMessagesPerPoll(LoadBalancedFileEndpoint lbEndpoint, PriorityFileFilterFactory factory) {
         //Update the MaxMessagesPerPoll to match the amount of watches, so we don't get competing files
         if (lbEndpoint.getMaxMessagesPerPoll() <= 0) {
-            LOG.debug("Updating MaxMessagesPerPoll from '{}' to '{}'", lbEndpoint.getMaxMessagesPerPoll(), factory.getAmountOfWatchers());
+            LOG.debug("Updating MaxMessagesPerPoll from '{}' to '{}'", lbEndpoint.getMaxMessagesPerPoll(), factory.getMaxMessagesPerPoll());
 
-            lbEndpoint.setMaxMessagesPerPoll(factory.getAmountOfWatchers());
+            lbEndpoint.setMaxMessagesPerPoll(factory.getMaxMessagesPerPoll());
         } else {
-            String message = String.format("MaxMessagesPerPoll is set as '%s' which does not match the amount of watchers '%s'", lbEndpoint.getMaxMessagesPerPoll(),
-                                           factory.getAmountOfWatchers());
+            String message = String.format("MaxMessagesPerPoll is set as '%s' which does not match the factory '%s'", lbEndpoint.getMaxMessagesPerPoll(),
+                                           factory.getMaxMessagesPerPoll());
 
             throw new ResolveEndpointFailedException(lbEndpoint.getEndpointUri(), message);
         }
@@ -113,9 +113,9 @@ public class LoadBalancedFileComponent extends FileComponent {
                 }
             }
 
-            LOG.debug("Updating Move from '{}' to '{}'", currentMove, move + filter.getPriority());
+            LOG.debug("Updating Move from '{}' to '{}'", currentMove, move + filter.getPriorityName());
 
-            lbEndpoint.setMove(move + filter.getPriority());
+            lbEndpoint.setMove(move + filter.getPriorityName());
         }
     }
 

@@ -36,13 +36,8 @@ public interface PriorityFileFilterFactory {
     PriorityFileFilter get();
 
     /**
-     * Gets the number of watchers that the factory has been setup for
+     * Gets max number of files read in per poll
      * @return
      */
-    int getAmountOfWatchers();
-
-    /**
-     * Reset the counters on each filter. This should be called at each poll point
-     */
-    void resetCountersOnFilters();
+    int getMaxMessagesPerPoll();
 }

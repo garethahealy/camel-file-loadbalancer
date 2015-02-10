@@ -26,20 +26,20 @@ public class DefaultPriorityFileFilterFactoryTest {
 
     @Test
     public void canCreateFactoryAndGetItem() {
-        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1);
+        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1, 1);
         factory.init();
 
         PriorityFileFilter filter = factory.get();
 
         Assert.assertNotNull(filter);
-        Assert.assertNotNull(filter.getPriority());
+        Assert.assertNotNull(filter.getPriorityName());
 
-        Assert.assertEquals(0, filter.getPriority());
+        Assert.assertEquals("0", filter.getPriorityName());
     }
 
     @Test
     public void canCreateFactoryAndGetMultipleItems() {
-        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(3);
+        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(3, 1);
         factory.init();
 
         PriorityFileFilter filter1 = factory.get();
@@ -47,21 +47,21 @@ public class DefaultPriorityFileFilterFactoryTest {
         PriorityFileFilter filter3 = factory.get();
 
         Assert.assertNotNull(filter1);
-        Assert.assertNotNull(filter1.getPriority());
-        Assert.assertEquals(0, filter1.getPriority());
+        Assert.assertNotNull(filter1.getPriorityName());
+        Assert.assertEquals("0", filter1.getPriorityName());
 
         Assert.assertNotNull(filter2);
-        Assert.assertNotNull(filter2.getPriority());
-        Assert.assertEquals(1, filter2.getPriority());
+        Assert.assertNotNull(filter2.getPriorityName());
+        Assert.assertEquals("1", filter2.getPriorityName());
 
         Assert.assertNotNull(filter3);
-        Assert.assertNotNull(filter3.getPriority());
-        Assert.assertEquals(2, filter3.getPriority());
+        Assert.assertNotNull(filter3.getPriorityName());
+        Assert.assertEquals("2", filter3.getPriorityName());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void callGetTooManyTimesGetAnException() {
-        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1);
+        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1, 1);
         factory.init();
 
         factory.get();
@@ -70,13 +70,27 @@ public class DefaultPriorityFileFilterFactoryTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void dontSetAmountOfWatchersGreaterThanZeroGetAnExpcetion() {
-        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(0);
+        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(0, 1);
+        factory.init();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void dontSetMaxMessagesPerPollGreaterThanZeroGetAnExpcetion() {
+        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1, 0);
         factory.init();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void dontCallInitGetAnExpcetion() {
-        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1);
+        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1, 1);
         factory.get();
+    }
+
+    @Test
+    public void getMaxMessagesPerPollReturns() {
+        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1, 1);
+        int max = factory.getMaxMessagesPerPoll();
+
+        Assert.assertEquals(1, max);
     }
 }

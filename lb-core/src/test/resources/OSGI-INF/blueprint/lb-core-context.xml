@@ -27,10 +27,13 @@
 
     <bean id="defaultPriorityFileFilterFactory" class="com.garethahealy.camel.file.loadbalancer.filter.DefaultPriorityFileFilterFactory" init-method="init">
         <argument value="1"/>
+        <argument value="1"/>
     </bean>
 
     <bean id="priorityFileFilter" class="com.garethahealy.camel.file.loadbalancer.filter.PriorityFileFilter">
         <argument value="0"/>
+        <argument value="1"/>
+        <argument value="1"/>
     </bean>
 
     <camelContext id="lb-core-context" trace="false" xmlns="http://camel.apache.org/schema/blueprint"/>

@@ -36,19 +36,6 @@ public class LoadBalancedFileConsumer extends FileConsumer {
     }
 
     @Override
-    protected boolean prePollCheck() throws Exception {
-        FileEndpoint endpoint = getEndpoint();
-        if (endpoint instanceof LoadBalancedFileEndpoint) {
-            LoadBalancedFileEndpoint lbEndpoint = (LoadBalancedFileEndpoint)endpoint;
-
-            PriorityFileFilterFactory factory = lbEndpoint.getPriorityFileFilterFactory();
-            factory.resetCountersOnFilters();
-        }
-
-        return super.prePollCheck();
-    }
-
-    @Override
     public String toString() {
         return new ToStringBuilder(this)
             .toString();

@@ -37,17 +37,23 @@ public class HandlesOneFileMultipleReadersTest extends BaseCamelBlueprintTestSup
     private String rootDirectory = System.getProperty("user.dir") + "/target/files1";
 
     @Override
+    public boolean isCreateCamelContextPerClass() {
+        return true;
+    }
+
+    @Override
     protected String useOverridePropertiesWithConfigAdmin(Dictionary props) throws Exception {
         props.put("lb.path", rootDirectory);
 
         return "com.garethahealy.camel.file.loadbalancer.example1";
     }
 
+    @Override
     protected void doPreSetup() throws Exception {
         File directory = FileUtils.toFile(new URL("file:" + rootDirectory));
         directory.mkdir();
 
-        URL file1 = HandlesOneFileMultipleReadersTest.class.getClassLoader().getResource("example-files/file1.log");
+        URL file1 = HandlesOneFileMultipleReadersTest.class.getClassLoader().getResource("example-files/afile1.log");
 
         Assert.assertNotNull(file1);
 
@@ -66,7 +72,7 @@ public class HandlesOneFileMultipleReadersTest extends BaseCamelBlueprintTestSup
     public void handlesOneFileMultipleReaders() throws InterruptedException, MalformedURLException {
         MockEndpoint first = getMockEndpoint("mock:endFirst");
         first.setExpectedMessageCount(1);
-        first.expectedBodiesReceived("file1.log");
+        first.expectedBodiesReceived("afile1.log");
 
         MockEndpoint second = getMockEndpoint("mock:endSecond");
         second.setExpectedMessageCount(0);
@@ -80,7 +86,7 @@ public class HandlesOneFileMultipleReadersTest extends BaseCamelBlueprintTestSup
         second.assertIsSatisfied();
         third.assertIsSatisfied();
 
-        Collection<File> firstFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel0")), FileFilterUtils.prefixFileFilter("file1.log"), null);
+        Collection<File> firstFiles = FileUtils.listFiles(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel0")), FileFilterUtils.prefixFileFilter("afile1.log"), null);
 
         Assert.assertNotNull(firstFiles);
         Assert.assertFalse(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel1")).exists());

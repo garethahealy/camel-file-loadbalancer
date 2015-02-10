@@ -56,7 +56,7 @@ public class LoadBalancedFileComponentTest extends BaseCamelBlueprintTestSupport
         Assert.assertNotNull(loadBalancedFileEndpoint.getMaxMessagesPerPoll());
 
         Assert.assertEquals("markerFile", loadBalancedFileEndpoint.getReadLock());
-        Assert.assertEquals(1, loadBalancedFileEndpoint.getPriorityFileFilterFactory().getAmountOfWatchers());
+        Assert.assertEquals(1, loadBalancedFileEndpoint.getPriorityFileFilterFactory().getMaxMessagesPerPoll());
         Assert.assertEquals(PriorityFileFilter.class, loadBalancedFileEndpoint.getFilter().getClass());
         Assert.assertEquals("${file:parent}/.camel0/${file:onlyname}", loadBalancedFileEndpoint.getMove().toString());
         Assert.assertEquals(1, loadBalancedFileEndpoint.getMaxMessagesPerPoll());
@@ -81,7 +81,7 @@ public class LoadBalancedFileComponentTest extends BaseCamelBlueprintTestSupport
         Assert.assertNotNull(loadBalancedFileEndpoint.getMaxMessagesPerPoll());
 
         Assert.assertEquals("markerFile", loadBalancedFileEndpoint.getReadLock());
-        Assert.assertEquals(1, loadBalancedFileEndpoint.getPriorityFileFilterFactory().getAmountOfWatchers());
+        Assert.assertEquals(1, loadBalancedFileEndpoint.getPriorityFileFilterFactory().getMaxMessagesPerPoll());
         Assert.assertEquals(PriorityFileFilter.class, loadBalancedFileEndpoint.getFilter().getClass());
         Assert.assertEquals("${file:parent}/.another0/${file:onlyname}", loadBalancedFileEndpoint.getMove().toString());
         Assert.assertEquals(1, loadBalancedFileEndpoint.getMaxMessagesPerPoll());

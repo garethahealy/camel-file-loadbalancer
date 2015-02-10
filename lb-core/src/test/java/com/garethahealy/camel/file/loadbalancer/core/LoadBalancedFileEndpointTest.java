@@ -31,7 +31,7 @@ public class LoadBalancedFileEndpointTest extends BaseCamelBlueprintTestSupport 
     public void canCreateEndpoint() throws Exception {
         String uri = "lb-file://" + rootDirectory + "?initialDelay=1s&delay=10s&priorityFileFilterFactory=#defaultPriorityFileFilterFactory&runLoggingLevel=INFO";
 
-        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1);
+        PriorityFileFilterFactory factory = new DefaultPriorityFileFilterFactory(1, 1);
         factory.init();
 
         LoadBalancedFileEndpoint loadBalancedFileEndpoint = new LoadBalancedFileEndpoint(uri, new LoadBalancedFileComponent(context));
@@ -41,6 +41,6 @@ public class LoadBalancedFileEndpointTest extends BaseCamelBlueprintTestSupport 
         Assert.assertNotNull(loadBalancedFileEndpoint.getReadLock());
         Assert.assertNotNull(loadBalancedFileEndpoint.getPriorityFileFilterFactory());
 
-        Assert.assertEquals(1, loadBalancedFileEndpoint.getPriorityFileFilterFactory().getAmountOfWatchers());
+        Assert.assertEquals(1, loadBalancedFileEndpoint.getPriorityFileFilterFactory().getMaxMessagesPerPoll());
     }
 }

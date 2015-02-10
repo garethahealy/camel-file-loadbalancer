@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +34,14 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
     private static final Logger LOG = LoggerFactory.getLogger(DefaultPriorityFileFilterFactory.class);
 
     private int amountOfWatchers;
+    private int maxMessagesPerPoll;
     private AtomicBoolean inited = new AtomicBoolean(false);
     private AtomicInteger counter = new AtomicInteger(0);
     private ConcurrentMap<Integer, PriorityFileFilter> holder;
 
-    public DefaultPriorityFileFilterFactory(int amountOfWatchers) {
+    public DefaultPriorityFileFilterFactory(int amountOfWatchers, int maxMessagesPerPoll) {
         this.amountOfWatchers = amountOfWatchers;
+        this.maxMessagesPerPoll = maxMessagesPerPoll;
     }
 
     @Override
@@ -48,6 +49,10 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
         if (!inited.get()) {
             if (amountOfWatchers <= 0) {
                 throw new IllegalArgumentException("AmountOfWatchers is less/equal to 0. Must be positive");
+            }
+
+            if (maxMessagesPerPoll <= 0) {
+                throw new IllegalArgumentException("MaxMessagesPerPoll is less/equal to 0. Must be positive");
             }
 
             if (holder == null) {
@@ -58,7 +63,10 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
             counter.set(0);
 
             for (int i = 0; i < amountOfWatchers; i++) {
-                holder.put(i, new PriorityFileFilter(i));
+                PriorityFileFilter filter = new PriorityFileFilter(i, amountOfWatchers, maxMessagesPerPoll);
+                filter.init();
+
+                holder.put(i, filter);
             }
 
             LOG.info("Created a holder of '{}' as amountOfWatchers is '{}'", holder.size(), amountOfWatchers);
@@ -83,17 +91,8 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
     }
 
     @Override
-    public synchronized int getAmountOfWatchers() {
-        return amountOfWatchers;
-    }
-
-    @Override
-    public synchronized void resetCountersOnFilters() {
-        if (holder != null) {
-            for (PriorityFileFilter current : holder.values()) {
-                current.resetCounter();
-            }
-        }
+    public synchronized int getMaxMessagesPerPoll() {
+        return maxMessagesPerPoll;
     }
 
     @Override
