@@ -19,9 +19,7 @@
  */
 package com.garethahealy.camel.file.loadbalancer.example1.routes;
 
-import org.apache.camel.test.blueprint.CamelBlueprintTestSupport;
-
-public class BaseCamelBlueprintTestSupport extends CamelBlueprintTestSupport {
+public class BaseCamelBlueprintTestSupport extends CamelBlueprintTestSupportFix7469 {
 
     @Override
     protected String getBlueprintDescriptor() {

@@ -23,6 +23,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Dictionary;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.camel.component.mock.MockEndpoint;
@@ -31,17 +32,24 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ReadFilesOKTest extends BaseCamelBlueprintTestSupport {
+public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSupport {
 
     private String rootDirectory = System.getProperty("user.dir") + "/target/files";
+
+    @Override
+    protected String useOverridePropertiesWithConfigAdmin(Dictionary props) throws Exception {
+        props.put("lb.path", rootDirectory);
+
+        return "com.garethahealy.camel.file.loadbalancer.example1";
+    }
 
     protected void doPreSetup() throws Exception {
         File directory = FileUtils.toFile(new URL("file:" + rootDirectory));
         directory.mkdir();
 
-        URL file1 = ReadFilesOKTest.class.getClassLoader().getResource("example-files/file1.log");
-        URL file2 = ReadFilesOKTest.class.getClassLoader().getResource("example-files/file2.log");
-        URL file3 = ReadFilesOKTest.class.getClassLoader().getResource("example-files/file3.log");
+        URL file1 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/file1.log");
+        URL file2 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/file2.log");
+        URL file3 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/file3.log");
 
         Assert.assertNotNull(file1);
         Assert.assertNotNull(file2);
@@ -61,7 +69,7 @@ public class ReadFilesOKTest extends BaseCamelBlueprintTestSupport {
     }
 
     @Test
-    public void canReadFile() throws InterruptedException, MalformedURLException {
+    public void readThreeFilesWithThreeReaders() throws InterruptedException, MalformedURLException {
         MockEndpoint first = getMockEndpoint("mock:endFirst");
         first.setExpectedMessageCount(1);
         first.expectedBodiesReceived("file1.log");
@@ -87,5 +95,9 @@ public class ReadFilesOKTest extends BaseCamelBlueprintTestSupport {
         Assert.assertNotNull(firstFiles);
         Assert.assertNotNull(secondFiles);
         Assert.assertNotNull(thirdFiles);
+
+        Assert.assertEquals(new Integer(1), new Integer(firstFiles.size()));
+        Assert.assertEquals(new Integer(1), new Integer(secondFiles.size()));
+        Assert.assertEquals(new Integer(1), new Integer(thirdFiles.size()));
     }
 }
