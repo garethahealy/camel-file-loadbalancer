@@ -40,7 +40,7 @@
         <argument ref="lb-example1-context"/>
     </bean>
 
-    <bean id="defaultPriorityFileFilterFactory" class="com.garethahealy.camel.file.loadbalancer.filter.DefaultPriorityFileFilterFactory" init-method="init">
+    <bean id="defaultPriorityFileFilterFactory" class="com.garethahealy.camel.file.loadbalancer.filter.DefaultPriorityFileFilterFactory" scope="singleton" init-method="init">
         <argument value="${lb.amountOfWatchers}"/>
     </bean>
 
