@@ -23,6 +23,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +42,7 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
     }
 
     @Override
-    public void init() {
+    public synchronized void init() {
         if (amountOfWatchers <= 0) {
             throw new IllegalArgumentException("AmountOfWatchers is less/equal to 0. Must be positive");
         }
@@ -59,7 +62,7 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
     }
 
     @Override
-    public PriorityFileFilter get() {
+    public synchronized PriorityFileFilter get() {
         if (holder == null || holder.size() <= 0) {
             throw new IllegalArgumentException("Have you called init?, because holder is null");
         }
@@ -74,16 +77,26 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
     }
 
     @Override
-    public int getAmountOfWatchers() {
+    public synchronized int getAmountOfWatchers() {
         return amountOfWatchers;
     }
 
     @Override
-    public void resetCountersOnFilters() {
+    public synchronized void resetCountersOnFilters() {
         if (holder != null) {
             for (PriorityFileFilter current : holder.values()) {
                 current.resetCounter();
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return EqualsBuilder.reflectionEquals(this, o);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 }
