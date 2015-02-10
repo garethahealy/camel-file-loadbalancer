@@ -17,14 +17,14 @@
  * limitations under the License.
  * #L%
  */
-package com.garethahealy.camel.file.loadbalancer.example.routes;
+package com.garethahealy.camel.file.loadbalancer.example1.routes;
 
-import org.junit.Test;
+import org.apache.camel.test.blueprint.CamelBlueprintTestSupport;
 
-public class CamelContextTest extends BaseCamelBlueprintTestSupport {
+public class BaseCamelBlueprintTestSupport extends CamelBlueprintTestSupport {
 
-    @Test
-    public void camelContextIsNotNull() {
-        assertNotNull(context);
+    @Override
+    protected String getBlueprintDescriptor() {
+        return "OSGI-INF/blueprint/lb-example1-context.xml";
     }
 }

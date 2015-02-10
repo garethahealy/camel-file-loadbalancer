@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.garethahealy.camel.file.loadbalancer.example.routes;
+package com.garethahealy.camel.file.loadbalancer.example1.routes;
 
 import java.io.File;
 import java.net.MalformedURLException;

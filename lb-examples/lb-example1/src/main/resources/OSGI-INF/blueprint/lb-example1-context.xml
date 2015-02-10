@@ -29,7 +29,7 @@
 
     <cm:property-placeholder persistent-id="com.garethahealy.camel.file.loadbalancer.example" update-strategy="reload">
         <cm:default-properties>
-            <cm:property name="lb.path" value="/Users/garethah/Documents/github/garethahealy/camel-file-loadbalancer/lb-example/target/files"/>
+            <cm:property name="lb.path" value="/Users/garethah/Documents/github/garethahealy/camel-file-loadbalancer/lb-examples/lb-example1/target/files"/>
             <cm:property name="lb.initialDelay" value="5s"/>
             <cm:property name="lb.delay" value="10s"/>
             <cm:property name="lb.amountOfWatchers" value="3"/>
@@ -37,18 +37,18 @@
     </cm:property-placeholder>
 
     <bean id="lb-file" class="com.garethahealy.camel.file.loadbalancer.core.LoadBalancedFileComponent">
-        <argument ref="lb-example-context"/>
+        <argument ref="lb-example1-context"/>
     </bean>
 
     <bean id="defaultPriorityFileFilterFactory" class="com.garethahealy.camel.file.loadbalancer.filter.DefaultPriorityFileFilterFactory" init-method="init">
         <argument value="${lb.amountOfWatchers}"/>
     </bean>
 
-    <camelContext id="lb-example-context" trace="false" xmlns="http://camel.apache.org/schema/blueprint">
+    <camelContext id="lb-example1-context" trace="false" xmlns="http://camel.apache.org/schema/blueprint">
 
         <route id="readFirstFile">
             <from uri="lb-file://{{lb.path}}?initialDelay={{lb.initialDelay}}&amp;delay={{lb.delay}}&amp;priorityFileFilterFactory=#defaultPriorityFileFilterFactory&amp;runLoggingLevel=INFO&amp;uniqueKey=1"/>
-            <log message="readFirstFile - ${header.CamelFileName}"/>
+            <log message="readFileFirst - ${header.CamelFileName}"/>
             <setBody>
                 <simple>${header.CamelFileName}</simple>
             </setBody>
@@ -57,7 +57,7 @@
 
         <route id="readSecondFile">
             <from uri="lb-file://{{lb.path}}?initialDelay={{lb.initialDelay}}&amp;delay={{lb.delay}}&amp;priorityFileFilterFactory=#defaultPriorityFileFilterFactory&amp;runLoggingLevel=INFO&amp;uniqueKey=2"/>
-            <log message="readSecondFile - ${header.CamelFileName}"/>
+            <log message="readFileSecond - ${header.CamelFileName}"/>
             <setBody>
                 <simple>${header.CamelFileName}</simple>
             </setBody>
@@ -66,7 +66,7 @@
 
         <route id="readThirdFile">
             <from uri="lb-file://{{lb.path}}?initialDelay={{lb.initialDelay}}&amp;delay={{lb.delay}}&amp;priorityFileFilterFactory=#defaultPriorityFileFilterFactory&amp;runLoggingLevel=INFO&amp;uniqueKey=3"/>
-            <log message="readThirdFile - ${header.CamelFileName}"/>
+            <log message="readFileThird - ${header.CamelFileName}"/>
             <setBody>
                 <simple>${header.CamelFileName}</simple>
             </setBody>
