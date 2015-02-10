@@ -27,7 +27,7 @@
        http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
        http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
 
-    <cm:property-placeholder persistent-id="com.garethahealy.camel.file.loadbalancer.example" update-strategy="reload">
+    <cm:property-placeholder persistent-id="com.garethahealy.camel.file.loadbalancer.example1" update-strategy="reload">
         <cm:default-properties>
             <cm:property name="lb.path" value="/Users/garethah/Documents/github/garethahealy/camel-file-loadbalancer/lb-examples/lb-example1/target/files"/>
             <cm:property name="lb.initialDelay" value="5s"/>
