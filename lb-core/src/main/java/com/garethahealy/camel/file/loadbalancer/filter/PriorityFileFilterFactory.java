@@ -19,13 +19,30 @@
  */
 package com.garethahealy.camel.file.loadbalancer.filter;
 
+/**
+ * Factory to create a number of PriorityFileFilter
+ */
 public interface PriorityFileFilterFactory {
 
+    /**
+     * Complete any setup work required by the factory
+     */
     void init();
 
+    /**
+     * Get a filter from the factory
+     * @return
+     */
     PriorityFileFilter get();
 
+    /**
+     * Gets the number of watchers that the factory has been setup for
+     * @return
+     */
     int getAmountOfWatchers();
 
+    /**
+     * Reset the counters on each filter. This should be called at each poll point
+     */
     void resetCountersOnFilters();
 }
