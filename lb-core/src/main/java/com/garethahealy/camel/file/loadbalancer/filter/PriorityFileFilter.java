@@ -20,7 +20,7 @@
 package com.garethahealy.camel.file.loadbalancer.filter;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -55,7 +55,7 @@ public class PriorityFileFilter implements GenericFileFilter {
      * Keep adding 5 until we hit 100, so we end up with: 0, 5, 10, 15 and so on
      */
     public void init() {
-        possiblePriorities = new HashSet<Integer>();
+        possiblePriorities = new LinkedHashSet<Integer>();
 
         int current = priority;
         while (current < maxMessagesPerPoll) {
@@ -98,7 +98,6 @@ public class PriorityFileFilter implements GenericFileFilter {
             throw new IllegalStateException("Possible priorities is null or empty. Have you called init?");
         }
 
-        // faulty...??
         boolean isPastMaxMessagesPerPoll = counter.get() > maxMessagesPerPoll;
         if (isPastMaxMessagesPerPoll) {
             counter.set(0);
@@ -107,7 +106,7 @@ public class PriorityFileFilter implements GenericFileFilter {
         int currentCount = counter.getAndIncrement();
         boolean isMatched = possiblePriorities.contains(currentCount);
 
-        LOG.debug("file: {}, count: {}, priority: {}, possiblePriorities: {}, isMatched: {}", file.getFileName(), currentCount, priority, cachedPossiblePrioritiesString,
+        LOG.debug("priority: {}, file: {}, count: {} possiblePriorities: {}, isMatched: {}", priority, file.getFileName(), currentCount, cachedPossiblePrioritiesString,
                   isMatched);
 
         return isMatched;
