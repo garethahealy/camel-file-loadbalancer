@@ -71,8 +71,14 @@ public class LoadBalancedFileComponent extends FileComponent {
         }
     }
 
+    /**
+     * Update the filter with one thats been created by the factory
+     *
+     * @param lbEndpoint
+     * @param factory
+     */
     private void updateFilter(LoadBalancedFileEndpoint lbEndpoint, PriorityFileFilterFactory factory) {
-        //Update the filter with one thats been created by the factory
+        //
         if (lbEndpoint.getFilter() == null) {
             LOG.debug("Updating Filter as not set for #{}", lbEndpoint.hashCode());
 
@@ -83,8 +89,13 @@ public class LoadBalancedFileComponent extends FileComponent {
 
     }
 
+    /**
+     * Update the MaxMessagesPerPoll to match what the factory was setup with, so we don't get competing files
+     *
+     * @param lbEndpoint
+     * @param factory
+     */
     private void updateMaxMessagesPerPoll(LoadBalancedFileEndpoint lbEndpoint, PriorityFileFilterFactory factory) {
-        //Update the MaxMessagesPerPoll to match the amount of watches, so we don't get competing files
         if (lbEndpoint.getMaxMessagesPerPoll() <= 0) {
             LOG.debug("Updating MaxMessagesPerPoll from '{}' to '{}' for #{}", lbEndpoint.getMaxMessagesPerPoll(), factory.getMaxMessagesPerPoll(), lbEndpoint.hashCode());
 
@@ -97,8 +108,12 @@ public class LoadBalancedFileComponent extends FileComponent {
         }
     }
 
+    /**
+     * Update Move so we can easily track whats files were handled by what endpoint
+     *
+     * @param lbEndpoint
+     */
     private void updateMove(LoadBalancedFileEndpoint lbEndpoint) {
-        //Update Move so we can easily track whats files were handled by what endpoint
         if (lbEndpoint.getFilter() instanceof PriorityFileFilter) {
             PriorityFileFilter filter = (PriorityFileFilter)lbEndpoint.getFilter();
 
