@@ -34,10 +34,4 @@ public class LoadBalancedFileConsumer extends FileConsumer {
     public LoadBalancedFileConsumer(LoadBalancedFileEndpoint endpoint, Processor processor, GenericFileOperations<File> operations) {
         super(endpoint, processor, operations);
     }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .toString();
-    }
 }

@@ -28,7 +28,6 @@ import org.apache.camel.Processor;
 import org.apache.camel.component.file.FileConsumer;
 import org.apache.camel.component.file.FileEndpoint;
 import org.apache.camel.component.file.GenericFileOperations;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 public class LoadBalancedFileEndpoint extends FileEndpoint {
 
