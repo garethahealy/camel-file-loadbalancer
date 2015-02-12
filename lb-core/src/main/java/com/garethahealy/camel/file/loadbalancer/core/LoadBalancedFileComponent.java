@@ -29,7 +29,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ResolveEndpointFailedException;
 import org.apache.camel.component.file.FileComponent;
 import org.apache.camel.component.file.GenericFileEndpoint;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +74,7 @@ public class LoadBalancedFileComponent extends FileComponent {
     private void updateFilter(LoadBalancedFileEndpoint lbEndpoint, PriorityFileFilterFactory factory) {
         //Update the filter with one thats been created by the factory
         if (lbEndpoint.getFilter() == null) {
-            LOG.debug("Updating Filter as not set");
+            LOG.debug("Updating Filter as not set for #{}", lbEndpoint.hashCode());
 
             lbEndpoint.setFilter(factory.get());
         } else {
@@ -87,7 +86,7 @@ public class LoadBalancedFileComponent extends FileComponent {
     private void updateMaxMessagesPerPoll(LoadBalancedFileEndpoint lbEndpoint, PriorityFileFilterFactory factory) {
         //Update the MaxMessagesPerPoll to match the amount of watches, so we don't get competing files
         if (lbEndpoint.getMaxMessagesPerPoll() <= 0) {
-            LOG.debug("Updating MaxMessagesPerPoll from '{}' to '{}'", lbEndpoint.getMaxMessagesPerPoll(), factory.getMaxMessagesPerPoll());
+            LOG.debug("Updating MaxMessagesPerPoll from '{}' to '{}' for #{}", lbEndpoint.getMaxMessagesPerPoll(), factory.getMaxMessagesPerPoll(), lbEndpoint.hashCode());
 
             lbEndpoint.setMaxMessagesPerPoll(factory.getMaxMessagesPerPoll());
         } else {
@@ -113,15 +112,9 @@ public class LoadBalancedFileComponent extends FileComponent {
                 }
             }
 
-            LOG.debug("Updating Move from '{}' to '{}'", currentMove, move + filter.getPriorityName());
+            LOG.debug("Updating Move from '{}' to '{}' for #{}", currentMove, move + filter.getPriorityName(), lbEndpoint.hashCode());
 
             lbEndpoint.setMove(move + filter.getPriorityName());
         }
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .toString();
     }
 }
