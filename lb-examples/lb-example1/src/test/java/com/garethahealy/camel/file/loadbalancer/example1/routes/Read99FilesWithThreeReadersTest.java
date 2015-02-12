@@ -35,16 +35,16 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSupport {
+public class Read99FilesWithThreeReadersTest extends BaseCamelBlueprintTestSupport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ReadThreeFilesWithThreeReadersTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Read99FilesWithThreeReadersTest.class);
 
-    private String rootDirectory = System.getProperty("user.dir") + "/target/files-3";
+    private String rootDirectory = System.getProperty("user.dir") + "/target/files-99";
 
     @Override
     protected String useOverridePropertiesWithConfigAdmin(Dictionary props) throws Exception {
         props.put("lb.path", rootDirectory);
-        props.put("lb.maxMessagesPerPoll", 3);
+        props.put("lb.maxMessagesPerPoll", 100);
 
         return "com.garethahealy.camel.file.loadbalancer.example1";
     }
@@ -56,19 +56,11 @@ public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSu
 
         directory.mkdir();
 
-        URL file1 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/afile1.log");
-        URL file2 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/bfile2.log");
-        URL file3 = ReadThreeFilesWithThreeReadersTest.class.getClassLoader().getResource("example-files/cfile3.log");
+        for (int i = 0; i < 99; i++) {
+            FileUtils.writeStringToFile(FileUtils.toFile(new URL("file:" + rootDirectory + "/file" + Integer.toString(i) + ".log")), "file" + Integer.toString(i));
+        }
 
-        Assert.assertNotNull(file1);
-        Assert.assertNotNull(file2);
-        Assert.assertNotNull(file3);
-
-        FileUtils.copyFileToDirectory(FileUtils.toFile(file1), directory);
-        FileUtils.copyFileToDirectory(FileUtils.toFile(file2), directory);
-        FileUtils.copyFileToDirectory(FileUtils.toFile(file3), directory);
-
-        LOG.info("Moved files to: " + directory.getAbsolutePath());
+        LOG.info("Wrote files to: " + directory.getAbsolutePath());
     }
 
     @Test
@@ -79,22 +71,22 @@ public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSu
         LOG.info("EndpointSetup: " + answer.toString());
 
         MockEndpoint first = getMockEndpoint("mock:endFirst");
-        first.setExpectedMessageCount(1);
+        first.setExpectedMessageCount(33);
         first.setResultWaitTime(TimeUnit.SECONDS.toMillis(15));
         first.setAssertPeriod(TimeUnit.SECONDS.toMillis(1));
 
         MockEndpoint second = getMockEndpoint("mock:endSecond");
-        second.setExpectedMessageCount(1);
+        second.setExpectedMessageCount(33);
         second.setResultWaitTime(TimeUnit.SECONDS.toMillis(15));
         second.setAssertPeriod(TimeUnit.SECONDS.toMillis(1));
 
         MockEndpoint third = getMockEndpoint("mock:endThird");
-        third.setExpectedMessageCount(1);
+        third.setExpectedMessageCount(33);
         third.setResultWaitTime(TimeUnit.SECONDS.toMillis(15));
         third.setAssertPeriod(TimeUnit.SECONDS.toMillis(1));
 
         //Wait for the files to be processed
-        sleep(10);
+        sleep(30);
 
         File firstDirectory = FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel0"));
         File secondDirectory = FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel1"));
@@ -113,6 +105,10 @@ public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSu
         Assert.assertNotNull(thirdFiles);
 
         //Check the files are unique, and we haven't copied the same file twice
+        int firstSize = firstFiles.size();
+        int secondSize = secondFiles.size();
+        int thirdSize = thirdFiles.size();
+
         firstFiles.removeAll(secondFiles);
         firstFiles.removeAll(thirdFiles);
 
@@ -122,10 +118,16 @@ public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSu
         thirdFiles.removeAll(firstFiles);
         thirdFiles.removeAll(secondFiles);
 
-        //Each directory should of only copied one file
-        Assert.assertEquals(new Integer(1), new Integer(firstFiles.size()));
-        Assert.assertEquals(new Integer(1), new Integer(secondFiles.size()));
-        Assert.assertEquals(new Integer(1), new Integer(thirdFiles.size()));
+        //If these numbers don't match, we duplicated a file
+        Assert.assertEquals("duplicate copy in .camel0", new Integer(firstSize), new Integer(firstFiles.size()));
+        Assert.assertEquals("duplicate copy in .camel1", new Integer(secondSize), new Integer(secondFiles.size()));
+        Assert.assertEquals("duplicate copy in .camel2", new Integer(thirdSize), new Integer(thirdFiles.size()));
+
+        //Check the expected copied amount is correct
+        Assert.assertEquals(new Integer(33), new Integer(firstFiles.size()));
+        Assert.assertEquals(new Integer(33), new Integer(secondFiles.size()));
+        Assert.assertEquals(new Integer(33), new Integer(thirdFiles.size()));
+        Assert.assertEquals(new Integer(99), new Integer(firstFiles.size() + secondFiles.size() + thirdFiles.size()));
 
         //Assert the endpoints last, as there seems to be a strange bug where they fail but the files have been processed,
         //so that would suggest the MockEndpoints are reporting a false-positive

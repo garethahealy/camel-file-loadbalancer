@@ -24,28 +24,26 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Dictionary;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HandlesOneFileMultipleReadersTest extends BaseCamelBlueprintTestSupport {
 
-    private String rootDirectory = System.getProperty("user.dir") + "/target/files1";
+    private static final Logger LOG = LoggerFactory.getLogger(HandlesOneFileMultipleReadersTest.class);
 
-    @Override
-    public boolean isCreateCamelContextPerClass() {
-        return true;
-    }
+    private String rootDirectory = System.getProperty("user.dir") + "/target/files-1";
 
     @Override
     protected String useOverridePropertiesWithConfigAdmin(Dictionary props) throws Exception {
         props.put("lb.path", rootDirectory);
+        props.put("lb.maxMessagesPerPoll", 3);
 
         return "com.garethahealy.camel.file.loadbalancer.example1";
     }
@@ -53,6 +51,8 @@ public class HandlesOneFileMultipleReadersTest extends BaseCamelBlueprintTestSup
     @Override
     protected void doPreSetup() throws Exception {
         File directory = FileUtils.toFile(new URL("file:" + rootDirectory));
+        FileUtils.deleteDirectory(directory);
+
         directory.mkdir();
 
         URL file1 = HandlesOneFileMultipleReadersTest.class.getClassLoader().getResource("example-files/afile1.log");
@@ -60,6 +60,8 @@ public class HandlesOneFileMultipleReadersTest extends BaseCamelBlueprintTestSup
         Assert.assertNotNull(file1);
 
         FileUtils.copyFileToDirectory(FileUtils.toFile(file1), directory);
+
+        LOG.info("Moved files to: " + directory.getAbsolutePath());
     }
 
     @Test
@@ -88,16 +90,15 @@ public class HandlesOneFileMultipleReadersTest extends BaseCamelBlueprintTestSup
         File secondDirectory = FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel1"));
         File thirdDirectory = FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel2"));
 
-        Assert.assertTrue(firstDirectory.exists());
-        Assert.assertFalse(secondDirectory.exists());
-        Assert.assertFalse(thirdDirectory.exists());
+        Assert.assertTrue(".camel0 doesnt exist", firstDirectory.exists());
+        Assert.assertFalse(".camel1 exists", secondDirectory.exists());
+        Assert.assertFalse(".camel2 exists", thirdDirectory.exists());
 
         Collection<File> firstFiles = FileUtils.listFiles(firstDirectory, FileFilterUtils.prefixFileFilter("afile1.log"), null);
 
         Assert.assertNotNull(firstFiles);
-        Assert.assertFalse(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel1")).exists());
-        Assert.assertFalse(FileUtils.toFile(new URL("file:" + rootDirectory + "/.camel2")).exists());
 
+        //Directory should of only copied one file
         Assert.assertEquals(new Integer(1), new Integer(firstFiles.size()));
     }
 }
