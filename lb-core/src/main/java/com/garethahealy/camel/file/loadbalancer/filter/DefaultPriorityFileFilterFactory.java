@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,16 +79,17 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
     @Override
     public synchronized PriorityFileFilter get() {
         if (holder == null || holder.size() <= 0) {
-            throw new IllegalArgumentException("Have you called init?, because holder is null");
+            throw new IllegalArgumentException("Have you called init?, because holder is null or empty");
         }
 
-        if (counter.get() >= holder.size()) {
-            throw new IllegalArgumentException("Get called too many times. Counter is '"
-                                               + counter.get() + "' but holder only has '" + holder.size()
+        int currentCount = counter.getAndIncrement();
+        if (currentCount >= holder.size()) {
+            throw new IllegalArgumentException("Got called too many times. Counter is '"
+                                               + currentCount + "' but holder only has '" + holder.size()
                                                + "' with amount of watchers as '" + amountOfWatchers + "'");
         }
 
-        return holder.get(counter.getAndIncrement());
+        return holder.get(currentCount);
     }
 
     @Override
@@ -103,5 +105,16 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("amountOfWatchers", amountOfWatchers)
+            .append("maxMessagesPerPoll", maxMessagesPerPoll)
+            .append("inited", inited)
+            .append("counter", counter)
+            .append("holder", holder)
+            .toString();
     }
 }
