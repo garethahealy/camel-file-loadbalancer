@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/garethahealy/camel-file-loadbalancer.svg?branch=master)](https://travis-ci.org/garethahealy/camel-file-loadbalancer)
+
 camel-file-loadbalancer
 ===================
 Sample code to have multiple camel file uri routes (either in same context or different), watching the same folder, i.e.: 'load balancer' for files
