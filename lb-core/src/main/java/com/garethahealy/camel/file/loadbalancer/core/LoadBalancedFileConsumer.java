@@ -1,6 +1,6 @@
 /*
  * #%L
- * lb-core
+ * GarethHealy :: Camel File Loadbalancer :: Core
  * %%
  * Copyright (C) 2013 - 2015 Gareth Healy
  * %%

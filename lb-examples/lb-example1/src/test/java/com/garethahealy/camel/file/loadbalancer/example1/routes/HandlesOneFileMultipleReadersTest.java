@@ -1,6 +1,6 @@
 /*
  * #%L
- * lb-example
+ * GarethHealy :: Camel File Loadbalancer :: Examples :: Example1
  * %%
  * Copyright (C) 2013 - 2015 Gareth Healy
  * %%

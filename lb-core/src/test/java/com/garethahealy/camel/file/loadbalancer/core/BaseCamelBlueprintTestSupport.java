@@ -1,6 +1,6 @@
 /*
  * #%L
- * camel-activemq-transacted
+ * GarethHealy :: Camel File Loadbalancer :: Core
  * %%
  * Copyright (C) 2013 - 2014 Gareth Healy
  * %%
