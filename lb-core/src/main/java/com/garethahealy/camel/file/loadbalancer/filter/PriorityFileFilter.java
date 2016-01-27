@@ -1,6 +1,6 @@
 /*
  * #%L
- * lb-core
+ * GarethHealy :: Camel File Loadbalancer :: Core
  * %%
  * Copyright (C) 2013 - 2015 Gareth Healy
  * %%
@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.camel.component.file.GenericFile;
 import org.apache.camel.component.file.GenericFileFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -72,7 +73,7 @@ public class PriorityFileFilter implements GenericFileFilter {
             possiblePriorities.add(priority);
         }
 
-        cachedPossiblePrioritiesString = Arrays.toString(possiblePriorities.toArray(new Integer[possiblePriorities.size()]));
+        cachedPossiblePrioritiesString = StringUtils.join(possiblePriorities, ",");
 
         LOG.debug("Created possible priorities of '{}' for '{}'", cachedPossiblePrioritiesString, priority);
     }
@@ -106,8 +107,7 @@ public class PriorityFileFilter implements GenericFileFilter {
         int currentCount = counter.getAndIncrement();
         boolean isMatched = possiblePriorities.contains(currentCount);
 
-        LOG.debug("priority: {}, file: {}, count: {} possiblePriorities: {}, isMatched: {}", priority, file.getFileName(), currentCount, cachedPossiblePrioritiesString,
-                  isMatched);
+        LOG.debug("{}, isMatched: {}", toString(), isMatched);
 
         return isMatched;
     }

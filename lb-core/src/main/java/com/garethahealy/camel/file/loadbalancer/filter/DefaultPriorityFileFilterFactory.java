@@ -1,6 +1,6 @@
 /*
  * #%L
- * lb-core
+ * GarethHealy :: Camel File Loadbalancer :: Core
  * %%
  * Copyright (C) 2013 - 2015 Gareth Healy
  * %%
@@ -46,8 +46,10 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
     }
 
     @Override
-    public synchronized void init() {
+    public void init() {
         if (!inited.get()) {
+            inited.set(true);
+
             if (amountOfWatchers <= 0) {
                 throw new IllegalArgumentException("AmountOfWatchers is less/equal to 0. Must be positive");
             }
@@ -63,6 +65,8 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
             holder.clear();
             counter.set(0);
 
+            LOG.info("Initializing {} watchers with {} max messages per poll", amountOfWatchers, maxMessagesPerPoll);
+
             for (int i = 0; i < amountOfWatchers; i++) {
                 PriorityFileFilter filter = new PriorityFileFilter(i, amountOfWatchers, maxMessagesPerPoll);
                 filter.init();
@@ -71,8 +75,6 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
             }
 
             LOG.info("Created a holder of '{}' as amountOfWatchers is '{}'", holder.size(), amountOfWatchers);
-
-            inited.set(true);
         }
     }
 

@@ -1,6 +1,6 @@
 /*
  * #%L
- * camel-activemq-transacted
+ * GarethHealy :: Camel File Loadbalancer :: Examples :: Example1
  * %%
  * Copyright (C) 2013 - 2014 Gareth Healy
  * %%
@@ -31,18 +31,14 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.component.file.GenericFileFilter;
 import org.apache.camel.model.FromDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.test.blueprint.CamelBlueprintTestSupport;
 import org.junit.Assert;
 
-public class BaseCamelBlueprintTestSupport extends CamelBlueprintTestSupportFix7469 {
+public class BaseCamelBlueprintTestSupport extends CamelBlueprintTestSupport {
 
     @Override
     protected String getBlueprintDescriptor() {
         return "OSGI-INF/blueprint/lb-example1-context.xml";
-    }
-
-    @Override
-    public boolean isCreateCamelContextPerClass() {
-        return true;
     }
 
     /**
