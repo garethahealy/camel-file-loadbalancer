@@ -1,3 +1,6 @@
+# NOTE: As of Camel 2.16, you can now use readLock=idempotent.
+# http://camel.apache.org/file2.html
+
 [![Build Status](https://travis-ci.org/garethahealy/camel-file-loadbalancer.svg?branch=master)](https://travis-ci.org/garethahealy/camel-file-loadbalancer)
 
 # camel-file-loadbalancer
