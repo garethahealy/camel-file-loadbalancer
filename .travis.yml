@@ -8,7 +8,7 @@ install:
 before_script:
   - mvn dependency:resolve-plugins
 script:
-  - mvn clean install -Dgpg.skip=true -DskipTests
+  - mvn clean install -Dgpg.skip=true
 cache:
   directories:
   - $HOME/.m2
