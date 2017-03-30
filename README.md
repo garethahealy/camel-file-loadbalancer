@@ -2,6 +2,8 @@
 # http://camel.apache.org/file2.html
 
 [![Build Status](https://travis-ci.org/garethahealy/camel-file-loadbalancer.svg?branch=master)](https://travis-ci.org/garethahealy/camel-file-loadbalancer)
+[![Release Version](https://img.shields.io/maven-central/v/com.garethahealy.camel-file-loadbalancer/camel-file-loadbalancer-parent.svg?maxAge=2592000)](https://mvnrepository.com/artifact/com.garethahealy.camel-file-loadbalancer/camel-file-loadbalancer-parent)
+[![License](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)]()
 
 # camel-file-loadbalancer
 Sample code to have multiple camel file uri routes (either in same context or different), watching the same folder, i.e.: 'load balancer' for files
