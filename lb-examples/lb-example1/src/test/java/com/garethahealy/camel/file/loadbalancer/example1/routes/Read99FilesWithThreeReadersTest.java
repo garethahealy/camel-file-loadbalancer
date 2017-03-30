@@ -2,7 +2,7 @@
  * #%L
  * GarethHealy :: Camel File Loadbalancer :: Examples :: Example1
  * %%
- * Copyright (C) 2013 - 2015 Gareth Healy
+ * Copyright (C) 2013 - 2017 Gareth Healy
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package com.garethahealy.camel.file.loadbalancer.example1.routes;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Map;
@@ -42,9 +43,9 @@ public class Read99FilesWithThreeReadersTest extends BaseCamelBlueprintTestSuppo
     private String rootDirectory = System.getProperty("user.dir") + "/target/files-99";
 
     @Override
-    protected String useOverridePropertiesWithConfigAdmin(Dictionary props) throws Exception {
+    protected String useOverridePropertiesWithConfigAdmin(Dictionary<String, String> props) throws Exception {
         props.put("lb.path", rootDirectory);
-        props.put("lb.maxMessagesPerPoll", 100);
+        props.put("lb.maxMessagesPerPoll", "100");
 
         return "com.garethahealy.camel.file.loadbalancer.example1";
     }
@@ -57,7 +58,7 @@ public class Read99FilesWithThreeReadersTest extends BaseCamelBlueprintTestSuppo
         directory.mkdir();
 
         for (int i = 0; i < 99; i++) {
-            FileUtils.writeStringToFile(FileUtils.toFile(new URL("file:" + rootDirectory + "/file" + Integer.toString(i) + ".log")), "file" + Integer.toString(i));
+            FileUtils.writeStringToFile(FileUtils.toFile(new URL("file:" + rootDirectory + "/file" + Integer.toString(i) + ".log")), "file" + Integer.toString(i), Charset.forName("UTF8"));
         }
 
         LOG.info("Wrote files to: " + directory.getAbsolutePath());

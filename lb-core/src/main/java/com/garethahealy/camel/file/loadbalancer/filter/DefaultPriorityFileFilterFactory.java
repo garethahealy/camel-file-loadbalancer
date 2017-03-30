@@ -2,7 +2,7 @@
  * #%L
  * GarethHealy :: Camel File Loadbalancer :: Core
  * %%
- * Copyright (C) 2013 - 2015 Gareth Healy
+ * Copyright (C) 2013 - 2017 Gareth Healy
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
  */
 package com.garethahealy.camel.file.loadbalancer.filter;
 
+import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -38,7 +39,7 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
     private int maxMessagesPerPoll;
     private AtomicBoolean inited = new AtomicBoolean(false);
     private AtomicInteger counter = new AtomicInteger(0);
-    private ConcurrentMap<Integer, PriorityFileFilter> holder;
+    private ConcurrentMap<Integer, PriorityFileFilter<File>> holder;
 
     public DefaultPriorityFileFilterFactory(int amountOfWatchers, int maxMessagesPerPoll) {
         this.amountOfWatchers = amountOfWatchers;
@@ -59,7 +60,7 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
             }
 
             if (holder == null) {
-                holder = new ConcurrentHashMap<Integer, PriorityFileFilter>();
+                holder = new ConcurrentHashMap<Integer, PriorityFileFilter<File>>();
             }
 
             holder.clear();
@@ -68,7 +69,7 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
             LOG.info("Initializing {} watchers with {} max messages per poll", amountOfWatchers, maxMessagesPerPoll);
 
             for (int i = 0; i < amountOfWatchers; i++) {
-                PriorityFileFilter filter = new PriorityFileFilter(i, amountOfWatchers, maxMessagesPerPoll);
+                PriorityFileFilter<File> filter = new PriorityFileFilter<File>(i, amountOfWatchers, maxMessagesPerPoll);
                 filter.init();
 
                 holder.put(i, filter);
@@ -79,7 +80,7 @@ public class DefaultPriorityFileFilterFactory implements PriorityFileFilterFacto
     }
 
     @Override
-    public synchronized PriorityFileFilter get() {
+    public synchronized PriorityFileFilter<File> get() {
         if (holder == null || holder.size() <= 0) {
             throw new IllegalArgumentException("Have you called init?, because holder is null or empty");
         }

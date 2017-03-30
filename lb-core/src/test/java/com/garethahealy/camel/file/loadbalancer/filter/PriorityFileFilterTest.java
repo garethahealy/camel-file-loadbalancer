@@ -2,7 +2,7 @@
  * #%L
  * GarethHealy :: Camel File Loadbalancer :: Core
  * %%
- * Copyright (C) 2013 - 2015 Gareth Healy
+ * Copyright (C) 2013 - 2017 Gareth Healy
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
  */
 package com.garethahealy.camel.file.loadbalancer.filter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class PriorityFileFilterTest {
 
     @Test
     public void getPriorityNameReturnsCorrectValue() {
-        PriorityFileFilter filter = new PriorityFileFilter(0, 1, 1);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(0, 1, 1);
         filter.init();
 
         Assert.assertNotNull(filter.getPriorityName());
@@ -40,7 +41,7 @@ public class PriorityFileFilterTest {
 
     @Test
     public void getPossiblePrioritiesReturnsOne() {
-        PriorityFileFilter filter = new PriorityFileFilter(0, 1, 1);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(0, 1, 1);
         filter.init();
 
         Set<Integer> answer = filter.getPossiblePriorities();
@@ -55,7 +56,7 @@ public class PriorityFileFilterTest {
 
     @Test
     public void getPossiblePrioritiesReturnsMultiplesOf3StartingAt0Until10() {
-        PriorityFileFilter filter = new PriorityFileFilter(0, 3, 10);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(0, 3, 10);
         filter.init();
 
         Set<Integer> answer = filter.getPossiblePriorities();
@@ -73,7 +74,7 @@ public class PriorityFileFilterTest {
 
     @Test
     public void getPossiblePrioritiesReturnsMultiplesOf3StartingAt1Until10() {
-        PriorityFileFilter filter = new PriorityFileFilter(1, 3, 10);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(1, 3, 10);
         filter.init();
 
         Set<Integer> answer = filter.getPossiblePriorities();
@@ -90,7 +91,7 @@ public class PriorityFileFilterTest {
 
     @Test
     public void getPossiblePrioritiesReturnsMultiplesOf3StartingAt0Until1() {
-        PriorityFileFilter filter = new PriorityFileFilter(0, 3, 1);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(0, 3, 1);
         filter.init();
 
         Set<Integer> answer = filter.getPossiblePriorities();
@@ -105,7 +106,7 @@ public class PriorityFileFilterTest {
 
     @Test
     public void getPossiblePrioritiesReturnsMultiplesOf3StartingAt1Until1() {
-        PriorityFileFilter filter = new PriorityFileFilter(1, 3, 1);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(1, 3, 1);
         filter.init();
 
         Set<Integer> answer = filter.getPossiblePriorities();
@@ -120,11 +121,11 @@ public class PriorityFileFilterTest {
 
     @Test
     public void acceptOnlyOneFileStartingAt0() {
-        PriorityFileFilter filter = new PriorityFileFilter(0, 3, 1);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(0, 3, 1);
         filter.init();
 
         for (int i = 0; i < 1; i++) {
-            GenericFile file1 = new GenericFile();
+            GenericFile<File> file1 = new GenericFile<File>();
             file1.setFileName("file0");
 
             Boolean answer = filter.accept(file1);
@@ -141,11 +142,11 @@ public class PriorityFileFilterTest {
 
     @Test
     public void acceptOnlyOneFileStartingAt1() {
-        PriorityFileFilter filter = new PriorityFileFilter(1, 3, 1);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(1, 3, 1);
         filter.init();
 
         for (int i = 0; i < 1; i++) {
-            GenericFile file1 = new GenericFile();
+            GenericFile<File> file1 = new GenericFile<File>();
             file1.setFileName("file1");
 
             Boolean answer = filter.accept(file1);
@@ -162,11 +163,11 @@ public class PriorityFileFilterTest {
 
     @Test
     public void acceptFourFilesStartingAt0() {
-        PriorityFileFilter filter = new PriorityFileFilter(0, 3, 10);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(0, 3, 10);
         filter.init();
 
         for (int i = 0; i < 10; i++) {
-            GenericFile file1 = new GenericFile();
+            GenericFile<File> file1 = new GenericFile<File>();
             file1.setFileName("file0");
 
             Boolean answer = filter.accept(file1);
@@ -183,11 +184,11 @@ public class PriorityFileFilterTest {
 
     @Test
     public void accept3FilesStartingAt1() {
-        PriorityFileFilter filter = new PriorityFileFilter(1, 3, 10);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(1, 3, 10);
         filter.init();
 
         for (int i = 0; i < 10; i++) {
-            GenericFile file1 = new GenericFile();
+            GenericFile<File> file1 = new GenericFile<File>();
             file1.setFileName("file0");
 
             Boolean answer = filter.accept(file1);
@@ -204,11 +205,11 @@ public class PriorityFileFilterTest {
 
     @Test
     public void accept7FilesStartingAt0Until20() {
-        PriorityFileFilter filter = new PriorityFileFilter(0, 3, 20);
+        PriorityFileFilter<File> filter = new PriorityFileFilter<File>(0, 3, 20);
         filter.init();
 
         for (int i = 0; i < 20; i++) {
-            GenericFile file1 = new GenericFile();
+            GenericFile<File> file1 = new GenericFile<File>();
             file1.setFileName("file0");
 
             Boolean answer = filter.accept(file1);

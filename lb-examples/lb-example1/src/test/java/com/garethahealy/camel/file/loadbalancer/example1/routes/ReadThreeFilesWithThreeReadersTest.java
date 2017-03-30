@@ -2,7 +2,7 @@
  * #%L
  * GarethHealy :: Camel File Loadbalancer :: Examples :: Example1
  * %%
- * Copyright (C) 2013 - 2015 Gareth Healy
+ * Copyright (C) 2013 - 2017 Gareth Healy
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,9 +42,9 @@ public class ReadThreeFilesWithThreeReadersTest extends BaseCamelBlueprintTestSu
     private String rootDirectory = System.getProperty("user.dir") + "/target/files-3";
 
     @Override
-    protected String useOverridePropertiesWithConfigAdmin(Dictionary props) throws Exception {
+    protected String useOverridePropertiesWithConfigAdmin(Dictionary<String, String> props) throws Exception {
         props.put("lb.path", rootDirectory);
-        props.put("lb.maxMessagesPerPoll", 3);
+        props.put("lb.maxMessagesPerPoll", "3");
 
         return "com.garethahealy.camel.file.loadbalancer.example1";
     }

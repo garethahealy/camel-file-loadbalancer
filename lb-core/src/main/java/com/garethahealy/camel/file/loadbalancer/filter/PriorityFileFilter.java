@@ -2,7 +2,7 @@
  * #%L
  * GarethHealy :: Camel File Loadbalancer :: Core
  * %%
- * Copyright (C) 2013 - 2015 Gareth Healy
+ * Copyright (C) 2013 - 2017 Gareth Healy
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
  */
 package com.garethahealy.camel.file.loadbalancer.filter;
 
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,7 +32,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PriorityFileFilter implements GenericFileFilter {
+public class PriorityFileFilter<T> implements GenericFileFilter<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PriorityFileFilter.class);
 
@@ -94,7 +93,7 @@ public class PriorityFileFilter implements GenericFileFilter {
      * @return
      */
     @Override
-    public boolean accept(GenericFile file) {
+    public boolean accept(GenericFile<T> file) {
         if (possiblePriorities == null || possiblePriorities.size() <= 0) {
             throw new IllegalStateException("Possible priorities is null or empty. Have you called init?");
         }
