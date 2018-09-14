@@ -1,9 +1,10 @@
-# NOTE: As of Camel 2.16, you can now use readLock=idempotent.
-# http://camel.apache.org/file2.html
-
 [![Build Status](https://travis-ci.org/garethahealy/camel-file-loadbalancer.svg?branch=master)](https://travis-ci.org/garethahealy/camel-file-loadbalancer)
 [![Release Version](https://img.shields.io/maven-central/v/com.garethahealy.camel-file-loadbalancer/camel-file-loadbalancer-parent.svg?maxAge=2592000)](https://mvnrepository.com/artifact/com.garethahealy.camel-file-loadbalancer/camel-file-loadbalancer-parent)
 [![License](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)]()
+
+# PLEASE READ
+As this was a PoC and was never fully completed/contributed back to the Apache Camel project, this repo should be regarded as dead. As of Camel 2.16, you can now use 'readLock=idempotent' which could accomplish the same goal:
+- http://camel.apache.org/file2.html
 
 # camel-file-loadbalancer
 Sample code to have multiple camel file uri routes (either in same context or different), watching the same folder, i.e.: 'load balancer' for files
