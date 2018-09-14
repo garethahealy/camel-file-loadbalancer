@@ -19,8 +19,6 @@ before_install:
 install:
 - mvn -N io.takari:maven:wrapper -Dmaven=3.5.0
 - java -version && javac -version && ./mvnw -version -B
-before_script:
-- ./mvnw com.offbytwo.maven.plugins:maven-dependency-plugin:3.1.1.MDEP568:go-offline -DexcludeGroupIds=com.github.dozermapper -B
 script:
 - ./mvnw clean install -B
 - ./mvnw clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -B
